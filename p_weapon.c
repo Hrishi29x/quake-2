@@ -9,6 +9,7 @@ static byte		is_silenced;
 
 
 void weapon_grenade_fire (edict_t *ent, qboolean held);
+int rocketspeed = 200;
 
 
 static void P_ProjectSource (gclient_t *client, vec3_t point, vec3_t distance, vec3_t forward, vec3_t right, vec3_t result)
@@ -747,7 +748,7 @@ void Weapon_RocketLauncher_Fire (edict_t *ent)
 
 	damage = 100 + (int)(random() * 20.0);
 	radius_damage = 120;
-	damage_radius = 120;
+	damage_radius = 120 + 280 - ((rocketspeed/10)*4);
 	if (is_quad)
 	{
 		damage *= 4;
@@ -761,7 +762,9 @@ void Weapon_RocketLauncher_Fire (edict_t *ent)
 
 	VectorSet(offset, 8, 8, ent->viewheight-8);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	fire_rocket (ent, start, forward, damage, 650, damage_radius, radius_damage);
+	fire_rocket (ent, start, forward, damage, rocketspeed, damage_radius, radius_damage);
+	rocketspeed = rocketspeed + 200;
+	if (rocketspeed >= 1000) rocketspeed = 200;
 
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
