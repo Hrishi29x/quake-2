@@ -1569,7 +1569,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 
 	level.current_entity = ent;
 	client = ent->client;
-	if (Life_Regen)
+	if (Life_Regen) // Life regeneration
 	{
 		if (ent->health < ent->max_health && LR == 0)
 			ent->health+=1;
