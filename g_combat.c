@@ -363,6 +363,7 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 	int			asave;
 	int			psave;
 	int			te_sparks;
+	int			r;
 
 	if (!targ->takedamage)
 		return;
@@ -388,6 +389,18 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		damage *= 0.5;
 		if (!damage)
 			damage = 1;
+	}
+	if (targ->client)	// check for damage evasion
+	{	
+		if (targ->client->pers.Evasive_Action)
+		{
+			r = random() * 100;
+			if (r > 50)
+			{
+				gi.bprintf (PRINT_HIGH, "Evaded!\n");
+				damage = 0;
+			}
+		}
 	}
 
 	client = targ->client;

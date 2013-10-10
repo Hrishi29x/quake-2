@@ -23,9 +23,6 @@ static void P_ProjectSource (gclient_t *client, vec3_t point, vec3_t distance, v
 	G_ProjectSource (point, _distance, forward, right, result);
 }
 
-int Double_Strike = 1; // flag for double strike
-int Infinite_Ammo = 1; // flag for infinite ammo
-
 
 /*
 ===============
@@ -503,7 +500,7 @@ void Weapon_Generic (edict_t *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_LAST,
 				fire (ent);
 				break;
 			}
-			else if (ent->client->ps.gunframe == (fire_frames[n]+2) && Double_Strike == 1) // additional firing animation for double strike
+			else if (ent->client->ps.gunframe == (fire_frames[n]+2) && ent->client->pers.Double_Strike) // additional firing animation for double strike
 			{
 				if (ent->client->quad_framenum > level.framenum)
 					gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage3.wav"), 1, ATTN_NORM, 0);
@@ -556,8 +553,9 @@ void weapon_grenade_fire (edict_t *ent, qboolean held)
 	speed = GRENADE_MINSPEED + (GRENADE_TIMER - timer) * ((GRENADE_MAXSPEED - GRENADE_MINSPEED) / GRENADE_TIMER);
 	fire_grenade2 (ent, start, forward, damage, speed, timer, radius, held);
 
-	if (! ( (int)dmflags->value & DF_INFINITE_AMMO & Infinite_Ammo ) )
-		ent->client->pers.inventory[ent->client->ammo_index]--;
+	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
+		if ( ent->client->pers.Infinite_Ammo )
+			ent->client->pers.inventory[ent->client->ammo_index]--;
 
 	ent->client->grenade_time = level.time + 1.0;
 
@@ -728,7 +726,7 @@ void weapon_grenadelauncher_fire (edict_t *ent)
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
 	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-		if (! (Infinite_Ammo))
+		if (! (ent->client->pers.Infinite_Ammo))
 			ent->client->pers.inventory[ent->client->ammo_index]--;
 }
 
@@ -785,7 +783,7 @@ void Weapon_RocketLauncher_Fire (edict_t *ent)
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
 	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-		if (! (Infinite_Ammo))
+		if (! (ent->client->pers.Infinite_Ammo))
 			ent->client->pers.inventory[ent->client->ammo_index]--;
 }
 
@@ -899,7 +897,7 @@ void Weapon_HyperBlaster_Fire (edict_t *ent)
 				damage = 20;
 			Blaster_Fire (ent, offset, damage, true, effect);
 			if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-				if (! (Infinite_Ammo))
+				if (! (ent->client->pers.Infinite_Ammo))
 					ent->client->pers.inventory[ent->client->ammo_index]--;
 
 			ent->client->anim_priority = ANIM_ATTACK;
@@ -1015,7 +1013,7 @@ void Machinegun_Fire (edict_t *ent)
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
 	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-		if (! (Infinite_Ammo))
+		if (! (ent->client->pers.Infinite_Ammo))
 			ent->client->pers.inventory[ent->client->ammo_index]--;
 
 	ent->client->anim_priority = ANIM_ATTACK;
@@ -1155,7 +1153,7 @@ void Chaingun_Fire (edict_t *ent)
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
 	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-		if (! (Infinite_Ammo))
+		if (! (ent->client->pers.Infinite_Ammo))
 			ent->client->pers.inventory[ent->client->ammo_index] -= shots;
 }
 
@@ -1220,7 +1218,7 @@ void weapon_shotgun_fire (edict_t *ent)
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
 	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-		if (! (Infinite_Ammo))
+		if (! (ent->client->pers.Infinite_Ammo))
 			ent->client->pers.inventory[ent->client->ammo_index]--;
 }
 
@@ -1275,7 +1273,7 @@ void weapon_supershotgun_fire (edict_t *ent)
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
 	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-		if (! (Infinite_Ammo))
+		if (! (ent->client->pers.Infinite_Ammo))
 			ent->client->pers.inventory[ent->client->ammo_index] -= 2;
 }
 
@@ -1341,7 +1339,7 @@ void weapon_railgun_fire (edict_t *ent)
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
 	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-		if (! (Infinite_Ammo))
+		if (! (ent->client->pers.Infinite_Ammo))
 			ent->client->pers.inventory[ent->client->ammo_index]--;
 }
 
@@ -1418,7 +1416,7 @@ void weapon_bfg_fire (edict_t *ent)
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
 	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-		if (! (Infinite_Ammo))
+		if (! (ent->client->pers.Infinite_Ammo))
 			ent->client->pers.inventory[ent->client->ammo_index] -= 50;
 }
 

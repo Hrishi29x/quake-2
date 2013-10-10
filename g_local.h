@@ -843,7 +843,11 @@ typedef struct
 	int			game_helpchanged;
 	int			helpchanged;
 
-	qboolean	spectator;			// client is a spectator
+	qboolean	spectator;	// client is a spectator
+	int			Life_Regen; // flag for Life Regen
+	int			Double_Strike; // flag for Double Strike
+	int			Infinite_Ammo; // flag for Infinite Ammo
+	int			Evasive_Action; // flag for Evasive Action
 } client_persistant_t;
 
 // client data that stays across deathmatch respawns

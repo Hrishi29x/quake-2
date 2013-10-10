@@ -17,7 +17,7 @@ void SP_misc_teleporter_dest (edict_t *ent);
 // we use carnal knowledge of the maps to fix the coop spot targetnames to match
 // that of the nearest named single player spot
 
-int Life_Regen = 1, LR = 0; // flag for Life regen
+int	LR = 0;
 
 static void SP_FixCoopSpots (edict_t *self)
 {
@@ -610,6 +610,10 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.max_slugs		= 50;
 
 	client->pers.connected = true;
+	client->pers.Life_Regen = 1;
+	client->pers.Double_Strike = 1;
+	client->pers.Infinite_Ammo = 1;
+	client->pers.Evasive_Action = 1;
 }
 
 
@@ -1569,7 +1573,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 
 	level.current_entity = ent;
 	client = ent->client;
-	if (Life_Regen) // Life regeneration
+	if (client->pers.Life_Regen) // Life regeneration
 	{
 		if (ent->health < ent->max_health && LR == 0)
 			ent->health+=1;
