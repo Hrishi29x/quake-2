@@ -395,11 +395,7 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		if (targ->client->pers.Evasive_Action)
 		{
 			r = random() * 100;
-			if (r > 50)
-			{
-				gi.bprintf (PRINT_HIGH, "Evaded!\n");
-				damage = 0;
-			}
+			if (r > 50) damage = 0;
 		}
 	}
 
