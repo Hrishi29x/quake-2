@@ -360,7 +360,10 @@ A generic function to handle the basics of weapon thinking
 
 void Weapon_Generic (edict_t *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_LAST, int FRAME_IDLE_LAST, int FRAME_DEACTIVATE_LAST, int *pause_frames, int *fire_frames, void (*fire)(edict_t *ent))
 {
-	int		n;
+	int		n,rhealth;
+	vec3_t	dir;
+	rhealth = ent->client->pers.max_health/10;
+	VectorSet (dir, 0, 0, 1);
 
 	if(ent->deadflag || ent->s.modelindex != 255) // VWep animations screw up corpses
 	{
@@ -497,6 +500,7 @@ void Weapon_Generic (edict_t *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_LAST,
 				if (ent->client->quad_framenum > level.framenum)
 					gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage3.wav"), 1, ATTN_NORM, 0);
 
+				if (ent->client->pers.Bloody_Strike) T_Damage (ent, world, world, dir , ent->s.origin, vec3_origin, rhealth, 0, 0, MOD_HIT);
 				fire (ent);
 				break;
 			}

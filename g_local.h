@@ -848,6 +848,8 @@ typedef struct
 	int			Double_Strike; // flag for Double Strike
 	int			Infinite_Ammo; // flag for Infinite Ammo
 	int			Evasive_Action; // flag for Evasive Action
+	int			Bloody_Strike; // flag for Bloody Strike
+	int			Life_Leech; // flag for Life Leech
 } client_persistant_t;
 
 // client data that stays across deathmatch respawns

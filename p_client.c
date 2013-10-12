@@ -610,10 +610,12 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.max_slugs		= 50;
 
 	client->pers.connected = true;
-	client->pers.Life_Regen = 1;
-	client->pers.Double_Strike = 1;
+	client->pers.Life_Regen = 0;
+	client->pers.Double_Strike = 0;
 	client->pers.Infinite_Ammo = 1;
-	client->pers.Evasive_Action = 1;
+	client->pers.Evasive_Action = 0;
+	client->pers.Bloody_Strike = 0;
+	client->pers.Life_Leech = 1;
 }
 
 

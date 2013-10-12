@@ -398,6 +398,10 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 			if (r > 50) damage = 0;
 		}
 	}
+	if (attacker->client && attacker->client->pers.Bloody_Strike) // additional damage for bloody strike
+	{
+		damage *= 1.5;
+	}
 
 	client = targ->client;
 
@@ -525,6 +529,11 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		client->damage_blood += take;
 		client->damage_knockback += knockback;
 		VectorCopy (point, client->damage_from);
+	}
+	if (attacker->client && attacker->client->pers.Life_Leech) // Life leech code
+	{
+		if (attacker->health < attacker->max_health)
+			attacker->health += damage*0.25;
 	}
 }
 
