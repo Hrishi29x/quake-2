@@ -297,19 +297,19 @@ void HelpComputer (edict_t *ent)
 	// send the layout
 	Com_sprintf (string, sizeof(string),
 		"xv 32 yv 8 picn help "			// background
-		"xv 202 yv 12 string2 \"%s\" "		// skill
-		"xv 0 yv 24 cstring2 \"%s\" "		// level name
+		"xv 202 yv 12 string2 \"L : %i\" "		// skill
+		"xv 0 yv 24 cstring2 \"Exp : %i/%i\" "		// level name
 		"xv 0 yv 54 cstring2 \"%s\" "		// help 1
 		"xv 0 yv 110 cstring2 \"%s\" "		// help 2
-		"xv 50 yv 164 string2 \" kills     goals    secrets\" "
-		"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ", 
-		sk,
-		level.level_name,
+		"xv 50 yv 164 string2 \" STR       POW       DEX\" " // player stats
+		"xv 50 yv 172 string2 \" %i        %i        %i\" ", 
+		ent->client->pers.lvl,
+		ent->client->pers.exp, ent->client->pers.rexp,
 		game.helpmessage1,
 		game.helpmessage2,
-		level.killed_monsters, level.total_monsters, 
-		level.found_goals, level.total_goals,
-		level.found_secrets, level.total_secrets);
+		ent->client->pers.str, 
+		ent->client->pers.pow,
+		ent->client->pers.dex);
 
 	gi.WriteByte (svc_layout);
 	gi.WriteString (string);

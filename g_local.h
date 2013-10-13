@@ -850,6 +850,12 @@ typedef struct
 	int			Evasive_Action; // flag for Evasive Action
 	int			Bloody_Strike; // flag for Bloody Strike
 	int			Life_Leech; // flag for Life Leech
+	int			str; // strength
+	int			pow; // power
+	int			dex; // dexterity
+	int			lvl; // level
+	int			exp; // current experience
+	int			rexp; // required experience to level up
 } client_persistant_t;
 
 // client data that stays across deathmatch respawns

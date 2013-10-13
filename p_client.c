@@ -590,6 +590,11 @@ but is called after each death and level change in deathmatch
 void InitClientPersistant (gclient_t *client)
 {
 	gitem_t		*item;
+	int			r1,r2,r3;
+
+	r1 = random() * 10;
+	r2 = random() * 10;
+	r3 = random() * 10;
 
 	memset (&client->pers, 0, sizeof(client->pers));
 
@@ -598,9 +603,16 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.inventory[client->pers.selected_item] = 1;
 
 	client->pers.weapon = item;
+	
+	client->pers.str = 20 + r1;
+	client->pers.pow = 20 + r2;
+	client->pers.dex = 20 + r3;
+	client->pers.lvl = 2;
+	client->pers.exp = 0;
+	client->pers.rexp = 20 * pow (4,client->pers.lvl);
 
-	client->pers.health			= 100;
-	client->pers.max_health		= 100;
+	client->pers.health			= 100 + client->pers.str;
+	client->pers.max_health		= 100 + client->pers.str;
 
 	client->pers.max_bullets	= 200;
 	client->pers.max_shells		= 100;
@@ -616,6 +628,7 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.Evasive_Action = 0;
 	client->pers.Bloody_Strike = 0;
 	client->pers.Life_Leech = 1;
+
 }
 
 
