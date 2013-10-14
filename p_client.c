@@ -592,9 +592,10 @@ void InitClientPersistant (gclient_t *client)
 	gitem_t		*item;
 	int			r1,r2,r3;
 
-	r1 = random() * 10;
-	r2 = random() * 10;
-	r3 = random() * 10;
+	srand(time(NULL));
+	r1 = rand() % 11;
+	r2 = rand() % 11;
+	r3 = rand() % 11;
 
 	memset (&client->pers, 0, sizeof(client->pers));
 
@@ -607,7 +608,7 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.str = 20 + r1;
 	client->pers.pow = 20 + r2;
 	client->pers.dex = 20 + r3;
-	client->pers.lvl = 2;
+	client->pers.lvl = 1;
 	client->pers.exp = 0;
 	client->pers.rexp = 20 * pow (4,client->pers.lvl);
 
@@ -1595,6 +1596,19 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		LR = (LR + 1)%20;
 	}
 
+	if (client->pers.exp >= client->pers.rexp)
+	{
+		client->pers.exp = client->pers.exp - client->pers.rexp;
+		client->pers.lvl += 1;
+		client->pers.str += 5 + random() * 5;
+		client->pers.pow += 5 + random() * 5;
+		client->pers.dex += 5 + random() * 5;
+		client->pers.max_health = 100 + client->pers.str;
+		client->pers.health = 100 + client->pers.str;
+		ent->health = client->pers.health;
+		ent->max_health = client->pers.max_health;
+		client->pers.rexp = pow (4,client->pers.lvl) * 20;
+	}
 	if (level.intermissiontime)
 	{
 		client->ps.pmove.pm_type = PM_FREEZE;

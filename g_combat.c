@@ -83,6 +83,7 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 		if (!(targ->monsterinfo.aiflags & AI_GOOD_GUY))
 		{
 			level.killed_monsters++;
+			attacker->client->pers.exp += 20; // temporary exp (monster max_health not working?)
 			if (coop->value && attacker->client)
 				attacker->client->resp.score++;
 			// medics won't heal monsters that they kill themselves
@@ -363,7 +364,7 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 	int			asave;
 	int			psave;
 	int			te_sparks;
-	int			r;
+	int			r,temp;
 
 	if (!targ->takedamage)
 		return;
@@ -392,15 +393,24 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 	}
 	if (targ->client)	// check for damage evasion
 	{	
-		if (targ->client->pers.Evasive_Action)
+		r = rand() % 101;
+		temp = targ->client->pers.dex/2;
+		if (temp > 95) temp = 95;
+		if (r <= temp) damage = 0;
+		else if (targ->client->pers.Evasive_Action) // check for evasive action
 		{
-			r = random() * 100;
+			r = rand() % 101;
 			if (r > 50) damage = 0;
 		}
 	}
-	if (attacker->client && attacker->client->pers.Bloody_Strike) // additional damage for bloody strike
+	if (attacker->client) // check for damage increases
 	{
-		damage *= 1.5;
+		r = rand() % 101;
+		temp = attacker->client->pers.dex/2;
+		if (temp > 95) temp = 95;
+		if (r <= temp) damage *= 2;
+		damage = damage + (damage * attacker->client->pers.pow/10);
+		if (attacker->client->pers.Bloody_Strike) damage *= 1.5; // bloody strike extra damage
 	}
 
 	client = targ->client;
