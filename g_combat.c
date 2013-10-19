@@ -84,8 +84,18 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 		if (!(targ->monsterinfo.aiflags & AI_GOOD_GUY))
 		{
 			level.killed_monsters++;
-			attacker->client->pers.exp += 20; // temporary exp (monster max_health not working?)
-			r = 0;
+			attacker->client->pers.exp += 20;
+			r = 1 + rand()%100;
+			if (r > 0)
+			{
+				if (attacker->client->pers.Affix[0] == 0 || attacker->client->pers.Affix[1] == 0)
+				{
+					drop = G_Spawn();
+					VectorCopy(targ->s.origin, drop->s.origin);
+					SpawnItem(drop,FindItem("Special Affix"));
+					gi.linkentity(drop);
+				}
+			}
 			if (coop->value && attacker->client)
 				attacker->client->resp.score++;
 			// medics won't heal monsters that they kill themselves
@@ -93,13 +103,6 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 				targ->owner = attacker;
 		}
 	}
-	r = 0;
-	drop = G_Spawn();
-	VectorCopy(targ->s.origin, drop->s.origin);
-	SpawnItem(drop,FindItem("Special Affix"));
-	gi.linkentity(drop);
-	G_FreeEdict(drop);
-
 	if (targ->movetype == MOVETYPE_PUSH || targ->movetype == MOVETYPE_STOP || targ->movetype == MOVETYPE_NONE)
 	{	// doors, triggers, etc
 		targ->die (targ, inflictor, attacker, damage, point);
@@ -405,7 +408,7 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		temp = targ->client->pers.dex/2;
 		if (temp > 95) temp = 95;
 		if (r <= temp) damage = 0;
-		else if (targ->client->pers.Affix[0] == 4 || targ->client->pers.Affix[1] == 4) // check for evasive action
+		else if (targ->client->pers.Affix[0] == 3 || targ->client->pers.Affix[1] == 3) // check for evasive action
 		{
 			r = rand() % 101;
 			if (r > 50) damage = 0;
@@ -418,7 +421,7 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		if (temp > 95) temp = 95;
 		if (r <= temp) damage *= 2;
 		damage = damage + (damage * attacker->client->pers.pow/10);
-		if (attacker->client->pers.Affix[0] == 5 || attacker->client->pers.Affix[1] == 5) damage *= 1.5; // bloody strike extra damage
+		if (attacker->client->pers.Affix[0] == 2 || attacker->client->pers.Affix[1] == 2) damage *= 1.5; // bloody strike extra damage
 	}
 
 	client = targ->client;

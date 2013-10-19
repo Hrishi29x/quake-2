@@ -500,19 +500,19 @@ void Weapon_Generic (edict_t *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_LAST,
 				if (ent->client->quad_framenum > level.framenum)
 					gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage3.wav"), 1, ATTN_NORM, 0);
 
-				if (ent->client->pers.Affix[0] == 5 || ent->client->pers.Affix[1] == 5) 
+				if (ent->client->pers.Affix[0] == 2 || ent->client->pers.Affix[1] == 2) 
 					T_Damage (ent, world, world, dir , ent->s.origin, vec3_origin, rhealth, 0, 0, MOD_HIT);
 				fire (ent);
 				break;
 			}
 			else if (ent->client->ps.gunframe == (fire_frames[n]+2)) 
 			{
-				if (ent->client->pers.Affix[0] == 2 || ent->client->pers.Affix[1] == 2) // additional firing animation for double strike
+				if (ent->client->pers.Affix[0] == 1 || ent->client->pers.Affix[1] == 1) // additional firing animation for double strike
 				{
 					if (ent->client->quad_framenum > level.framenum)
 						gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage3.wav"), 1, ATTN_NORM, 0);
 
-					if (ent->client->pers.Affix[0] == 5 || ent->client->pers.Affix[1] == 5) 
+					if (ent->client->pers.Affix[0] == 2 || ent->client->pers.Affix[1] == 2) 
 						T_Damage (ent, world, world, dir , ent->s.origin, vec3_origin, rhealth, 0, 0, MOD_HIT);
 					fire (ent);
 					break;

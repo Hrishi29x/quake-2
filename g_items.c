@@ -569,17 +569,19 @@ qboolean Pickup_Health (edict_t *ent, edict_t *other)
 qboolean Pickup_Affix (edict_t *ent, edict_t *other)
 {
 	int	r = 0;
-		r = 1 + rand() % 6;
 		if (other->client->pers.Affix[0] == 0)
 		{
+			r = 1 + rand()%6;
 			other->client->pers.Affix[0] = r;
 		}
 		else if (other->client->pers.Affix[1] == 0)
 		{
-			other->client->pers.Affix[1] = r;
+			r = other->client->pers.Affix[0];
+			if (r > 3) other->client->pers.Affix[1] = r - 3;
+			else other->client->pers.Affix[1] = r + 3;
 		}
 		else return false;
-		if (other->client->pers.Affix[0] == 3 || other->client->pers.Affix[1] == 3) other->client->pers.Infinite_Ammo = 1;
+		if (other->client->pers.Affix[0] == 4 || other->client->pers.Affix[1] == 4) other->client->pers.Infinite_Ammo = 1;
 		return true;
 }
 				

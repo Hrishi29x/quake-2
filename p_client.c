@@ -623,9 +623,9 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.max_slugs		= 50;
 
 	client->pers.connected = true;
-	client->pers.Affix[0] = 1;
+	/*client->pers.Affix[0] = 1;
 	client->pers.Affix[1] = 3;
-	if (client->pers.Affix[0] == 3 || client->pers.Affix[1] == 3) client->pers.Infinite_Ammo = 1;
+	if (client->pers.Affix[0] == 3 || client->pers.Affix[1] == 3) client->pers.Infinite_Ammo = 1;*/
 	strcpy (client->pers.desc1, "Empty");
 	strcpy (client->pers.desc2, "Empty");
 
@@ -1588,7 +1588,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 
 	level.current_entity = ent;
 	client = ent->client;
-	if (client->pers.Affix[0] == 1 || client->pers.Affix[1] == 1) // Life regeneration
+	if (client->pers.Affix[0] == 5 || client->pers.Affix[1] == 5) // Life regeneration
 	{
 		if (ent->health < ent->max_health && LR == 0)
 			ent->health+=1;
@@ -1612,15 +1612,15 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 	{
 		switch (client->pers.Affix[0])
 		{
-			case 1 : strcpy (client->pers.desc1,"Regenerate Life.");
+			case 1 : strcpy (client->pers.desc1,"Double Strike.");
 					 break;
-			case 2 : strcpy (client->pers.desc1,"Double Strike.");
+			case 2 : strcpy (client->pers.desc1,"Blood Strike.");
 					 break;
-			case 3 : strcpy (client->pers.desc1,"Infinite Ammo.");
+			case 3 : strcpy (client->pers.desc1,"Dodge Attacks.");
 					 break;
-			case 4 : strcpy (client->pers.desc1,"Dodge Attacks.");
+			case 4 : strcpy (client->pers.desc1,"Infinite Ammo.");
 					 break;
-			case 5 : strcpy (client->pers.desc1,"Blood Strike.");
+			case 5 : strcpy (client->pers.desc1,"Life Regen.");
 					 break;
 			case 6 : strcpy (client->pers.desc1,"Life Leech.");
 					 break;
@@ -1631,15 +1631,15 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 	{
 		switch (client->pers.Affix[1])
 		{
-			case 1 : strcpy (client->pers.desc2,"Regenerate Life.");
+			case 1 : strcpy (client->pers.desc2,"Double Strike.");
 					 break;
-			case 2 : strcpy (client->pers.desc2,"Double Strike.");
+			case 2 : strcpy (client->pers.desc2,"Blood Strike.");
 					 break;
-			case 3 : strcpy (client->pers.desc2,"Infinite Ammo.");
+			case 3 : strcpy (client->pers.desc2,"Dodge Attacks.");
 					 break;
-			case 4 : strcpy (client->pers.desc2,"Dodge Attacks.");
+			case 4 : strcpy (client->pers.desc2,"Infinite Ammo.");
 					 break;
-			case 5 : strcpy (client->pers.desc2,"Blood Strike.");
+			case 5 : strcpy (client->pers.desc2,"Life Regen.");
 					 break;
 			case 6 : strcpy (client->pers.desc2,"Life Leech.");
 					 break;
