@@ -397,7 +397,7 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		temp = targ->client->pers.dex/2;
 		if (temp > 95) temp = 95;
 		if (r <= temp) damage = 0;
-		else if (targ->client->pers.Evasive_Action) // check for evasive action
+		else if (targ->client->pers.Affix[0] == 4 || targ->client->pers.Affix[1] == 4) // check for evasive action
 		{
 			r = rand() % 101;
 			if (r > 50) damage = 0;
@@ -410,7 +410,7 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		if (temp > 95) temp = 95;
 		if (r <= temp) damage *= 2;
 		damage = damage + (damage * attacker->client->pers.pow/10);
-		if (attacker->client->pers.Bloody_Strike) damage *= 1.5; // bloody strike extra damage
+		if (attacker->client->pers.Affix[0] == 5 || attacker->client->pers.Affix[1] == 5) damage *= 1.5; // bloody strike extra damage
 	}
 
 	client = targ->client;
@@ -540,10 +540,13 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		client->damage_knockback += knockback;
 		VectorCopy (point, client->damage_from);
 	}
-	if (attacker->client && attacker->client->pers.Life_Leech) // Life leech code
-	{
-		if (attacker->health < attacker->max_health)
-			attacker->health += damage*0.25;
+	if (attacker->client) 
+	{	
+		if (attacker->client->pers.Affix[0] == 6 || attacker->client->pers.Affix[1] == 6) // Life leech code
+		{
+			if (attacker->health < attacker->max_health)
+				attacker->health += damage*0.25;
+		}
 	}
 }
 

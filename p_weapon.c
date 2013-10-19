@@ -500,17 +500,23 @@ void Weapon_Generic (edict_t *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_LAST,
 				if (ent->client->quad_framenum > level.framenum)
 					gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage3.wav"), 1, ATTN_NORM, 0);
 
-				if (ent->client->pers.Bloody_Strike) T_Damage (ent, world, world, dir , ent->s.origin, vec3_origin, rhealth, 0, 0, MOD_HIT);
+				if (ent->client->pers.Affix[0] == 5 || ent->client->pers.Affix[1] == 5) 
+					T_Damage (ent, world, world, dir , ent->s.origin, vec3_origin, rhealth, 0, 0, MOD_HIT);
 				fire (ent);
 				break;
 			}
-			else if (ent->client->ps.gunframe == (fire_frames[n]+2) && ent->client->pers.Double_Strike) // additional firing animation for double strike
+			else if (ent->client->ps.gunframe == (fire_frames[n]+2)) 
 			{
-				if (ent->client->quad_framenum > level.framenum)
-					gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage3.wav"), 1, ATTN_NORM, 0);
+				if (ent->client->pers.Affix[0] == 2 || ent->client->pers.Affix[1] == 2) // additional firing animation for double strike
+				{
+					if (ent->client->quad_framenum > level.framenum)
+						gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage3.wav"), 1, ATTN_NORM, 0);
 
-				fire (ent);
-				break;
+					if (ent->client->pers.Affix[0] == 5 || ent->client->pers.Affix[1] == 5) 
+						T_Damage (ent, world, world, dir , ent->s.origin, vec3_origin, rhealth, 0, 0, MOD_HIT);
+					fire (ent);
+					break;
+				}
 			}
 		}
 
@@ -558,7 +564,7 @@ void weapon_grenade_fire (edict_t *ent, qboolean held)
 	fire_grenade2 (ent, start, forward, damage, speed, timer, radius, held);
 
 	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-		if ( ent->client->pers.Infinite_Ammo )
+		if (! (ent->client->pers.Infinite_Ammo) )
 			ent->client->pers.inventory[ent->client->ammo_index]--;
 
 	ent->client->grenade_time = level.time + 1.0;

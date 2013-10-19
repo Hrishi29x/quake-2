@@ -623,12 +623,9 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.max_slugs		= 50;
 
 	client->pers.connected = true;
-	client->pers.Life_Regen = 0;
-	client->pers.Double_Strike = 0;
-	client->pers.Infinite_Ammo = 1;
-	client->pers.Evasive_Action = 0;
-	client->pers.Bloody_Strike = 0;
-	client->pers.Life_Leech = 1;
+	client->pers.Affix[0] = 1;
+	client->pers.Affix[1] = 3;
+	if (client->pers.Affix[0] == 3 || client->pers.Affix[1] == 3) client->pers.Infinite_Ammo = 1;
 
 }
 
@@ -1589,7 +1586,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 
 	level.current_entity = ent;
 	client = ent->client;
-	if (client->pers.Life_Regen) // Life regeneration
+	if (client->pers.Affix[0] == 1 || client->pers.Affix[1] == 1) // Life regeneration
 	{
 		if (ent->health < ent->max_health && LR == 0)
 			ent->health+=1;

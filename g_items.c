@@ -566,6 +566,24 @@ qboolean Pickup_Health (edict_t *ent, edict_t *other)
 	return true;
 }
 
+qboolean Pickup_Affix (edict_t *ent, edict_t *other)
+{
+	int	r = 0;
+		r = 1 + rand() % 6;
+		if (other->client->pers.Affix[0] == 0)
+		{
+			other->client->pers.Affix[0] = r;
+		}
+		else if (other->client->pers.Affix[1] == 0)
+		{
+			other->client->pers.Affix[1] = r;
+		}
+		else return false;
+		if (other->client->pers.Affix[0] == 3 || other->client->pers.Affix[1] == 3) other->client->pers.Infinite_Ammo = 1;
+		return true;
+}
+				
+
 //======================================================================
 
 int ArmorIndex (edict_t *ent)
@@ -2092,6 +2110,29 @@ tank commander's head
 /* precache */ "items/s_health.wav items/n_health.wav items/l_health.wav items/m_health.wav"
 	},
 
+/*QUAKED item_special_affix (.3 .3 1) (-16 -16 -16) (16 16 16)
+*/
+	{
+		"item_special_affix", 
+		Pickup_Affix,
+		NULL,
+		NULL,
+		NULL,
+		"misc/ar1_pkup.wav",
+		"models/items/armor/body/tris.md2", EF_ROTATE,
+		NULL,
+/* icon */		"i_bodyarmor",
+/* pickup */	"Special Affix",
+/* width */		3,
+		0,
+		NULL,
+		0,
+		0,
+		NULL,
+		0,
+/* precache */ ""
+	},
+
 	// end of list marker
 	{NULL}
 };
@@ -2099,6 +2140,7 @@ tank commander's head
 
 /*QUAKED item_health (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
+
 void SP_item_health (edict_t *self)
 {
 	if ( deathmatch->value && ((int)dmflags->value & DF_NO_HEALTH) )

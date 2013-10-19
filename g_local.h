@@ -844,12 +844,8 @@ typedef struct
 	int			helpchanged;
 
 	qboolean	spectator;	// client is a spectator
-	int			Life_Regen; // flag for Life Regen
-	int			Double_Strike; // flag for Double Strike
-	int			Infinite_Ammo; // flag for Infinite Ammo
-	int			Evasive_Action; // flag for Evasive Action
-	int			Bloody_Strike; // flag for Bloody Strike
-	int			Life_Leech; // flag for Life Leech
+	int			Affix[2]; // 1: Life Regen, 2: Double Strike, 3: Infinite Ammo, 4: Evasive Action, 5: Bloody Strike, 6: Life Leech
+	int			Infinite_Ammo; // flag for Infinite Ammo seperate because it's so messy without it
 	int			str; // strength
 	int			pow; // power
 	int			dex; // dexterity
