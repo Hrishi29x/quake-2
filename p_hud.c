@@ -305,8 +305,8 @@ void HelpComputer (edict_t *ent)
 		"xv 50 yv 172 string2 \" %i        %i        %i\" ", 
 		ent->client->pers.lvl,
 		ent->client->pers.exp, ent->client->pers.rexp,
-		game.helpmessage1,
-		game.helpmessage2,
+		ent->client->pers.desc1,
+		ent->client->pers.desc2,
 		ent->client->pers.str, 
 		ent->client->pers.pow,
 		ent->client->pers.dex);

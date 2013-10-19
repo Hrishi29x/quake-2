@@ -852,6 +852,8 @@ typedef struct
 	int			lvl; // level
 	int			exp; // current experience
 	int			rexp; // required experience to level up
+	char		desc1[50]; // Description for first affix
+	char		desc2[50]; // Description for second affix
 } client_persistant_t;
 
 // client data that stays across deathmatch respawns

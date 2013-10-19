@@ -626,6 +626,8 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.Affix[0] = 1;
 	client->pers.Affix[1] = 3;
 	if (client->pers.Affix[0] == 3 || client->pers.Affix[1] == 3) client->pers.Infinite_Ammo = 1;
+	strcpy (client->pers.desc1, "Empty");
+	strcpy (client->pers.desc2, "Empty");
 
 }
 
@@ -1581,7 +1583,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 {
 	gclient_t	*client;
 	edict_t	*other;
-	int		i, j;
+	int		i, j,k;
 	pmove_t	pm;
 
 	level.current_entity = ent;
@@ -1605,6 +1607,44 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		ent->health = client->pers.health;
 		ent->max_health = client->pers.max_health;
 		client->pers.rexp = pow (4,client->pers.lvl) * 20;
+	}
+	if (client->pers.Affix[0] != 0 && strcmp(client->pers.desc1,"Empty") == 0)
+	{
+		switch (client->pers.Affix[0])
+		{
+			case 1 : strcpy (client->pers.desc1,"Regenerate Life.");
+					 break;
+			case 2 : strcpy (client->pers.desc1,"Double Strike.");
+					 break;
+			case 3 : strcpy (client->pers.desc1,"Infinite Ammo.");
+					 break;
+			case 4 : strcpy (client->pers.desc1,"Dodge Attacks.");
+					 break;
+			case 5 : strcpy (client->pers.desc1,"Blood Strike.");
+					 break;
+			case 6 : strcpy (client->pers.desc1,"Life Leech.");
+					 break;
+			default : break;
+		}
+	}
+	if (client->pers.Affix[1] != 0 && strcmp(client->pers.desc2,"Empty") == 0)
+	{
+		switch (client->pers.Affix[1])
+		{
+			case 1 : strcpy (client->pers.desc2,"Regenerate Life.");
+					 break;
+			case 2 : strcpy (client->pers.desc2,"Double Strike.");
+					 break;
+			case 3 : strcpy (client->pers.desc2,"Infinite Ammo.");
+					 break;
+			case 4 : strcpy (client->pers.desc2,"Dodge Attacks.");
+					 break;
+			case 5 : strcpy (client->pers.desc2,"Blood Strike.");
+					 break;
+			case 6 : strcpy (client->pers.desc2,"Life Leech.");
+					 break;
+			default : break;
+		}
 	}
 	if (level.intermissiontime)
 	{

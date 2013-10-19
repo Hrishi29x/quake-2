@@ -72,11 +72,12 @@ Killed
 */
 void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point)
 {
+	edict_t	*drop;
+	int		r;
 	if (targ->health < -999)
 		targ->health = -999;
 
 	targ->enemy = attacker;
-
 	if ((targ->svflags & SVF_MONSTER) && (targ->deadflag != DEAD_DEAD))
 	{
 //		targ->svflags |= SVF_DEADMONSTER;	// now treat as a different content type
@@ -84,6 +85,7 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 		{
 			level.killed_monsters++;
 			attacker->client->pers.exp += 20; // temporary exp (monster max_health not working?)
+			r = 0;
 			if (coop->value && attacker->client)
 				attacker->client->resp.score++;
 			// medics won't heal monsters that they kill themselves
@@ -91,6 +93,12 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 				targ->owner = attacker;
 		}
 	}
+	r = 0;
+	drop = G_Spawn();
+	VectorCopy(targ->s.origin, drop->s.origin);
+	SpawnItem(drop,FindItem("Special Affix"));
+	gi.linkentity(drop);
+	G_FreeEdict(drop);
 
 	if (targ->movetype == MOVETYPE_PUSH || targ->movetype == MOVETYPE_STOP || targ->movetype == MOVETYPE_NONE)
 	{	// doors, triggers, etc
