@@ -2121,7 +2121,7 @@ tank commander's head
 		NULL,
 		NULL,
 		"misc/ar1_pkup.wav",
-		"models/items/armor/body/tris.md2", EF_ROTATE,
+		"models/items/quaddama/tris.md2", EF_ROTATE,
 		NULL,
 /* icon */		"i_bodyarmor",
 /* pickup */	"Special Affix",

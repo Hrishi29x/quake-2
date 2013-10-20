@@ -84,11 +84,11 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 		if (!(targ->monsterinfo.aiflags & AI_GOOD_GUY))
 		{
 			level.killed_monsters++;
-			attacker->client->pers.exp += 20;
+			attacker->client->pers.exp += 20; // grant experience per kill
 			r = 1 + rand()%100;
-			if (r > 0)
+			if (r >= 80) // 20% drop rate for special affix items
 			{
-				if (attacker->client->pers.Affix[0] == 0 || attacker->client->pers.Affix[1] == 0)
+				if (attacker->client->pers.Affix[0] == 0 || attacker->client->pers.Affix[1] == 0) // checks to see if affix items already exist
 				{
 					drop = G_Spawn();
 					VectorCopy(targ->s.origin, drop->s.origin);
