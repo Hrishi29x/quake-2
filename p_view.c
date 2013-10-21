@@ -302,19 +302,32 @@ void SV_CalcViewOffset (edict_t *ent)
 	// absolutely bound offsets
 	// so the view can never be outside the player box
 
-	if (v[0] < -14)
-		v[0] = -14;
-	else if (v[0] > 14)
-		v[0] = 14;
-	if (v[1] < -14)
-		v[1] = -14;
-	else if (v[1] > 14)
-		v[1] = 14;
-	if (v[2] < -22)
-		v[2] = -22;
-	else if (v[2] > 30)
-		v[2] = 30;
-
+	if (!ent->client->chasetoggle)
+	{
+		if (v[0] < -14)
+			v[0] = -14;
+		else if (v[0] > 14)
+			v[0] = 14;
+		if (v[1] < -14)
+			v[1] = -14;
+		else if (v[1] > 14)
+			v[1] = 14;
+		if (v[2] < -22)
+			v[2] = -22;
+		else if (v[2] > 30)
+			v[2] = 30;
+	}
+	else
+	{
+		VectorSet (v, 0, 0, 0);
+		if (ent->client->chasecam != NULL)
+		{
+			ent->client->ps.pmove.origin[0] = ent->client->chasecam->s.origin[0]*8;
+            ent->client->ps.pmove.origin[1] = ent->client->chasecam->s.origin[1]*8;
+            ent->client->ps.pmove.origin[2] = ent->client->chasecam->s.origin[2]*8;
+            VectorCopy (ent->client->chasecam->s.angles, ent->client->ps.viewangles);
+        }
+	}
 	VectorCopy (v, ent->client->ps.viewoffset);
 }
 
@@ -1063,6 +1076,185 @@ void ClientEndServerFrame (edict_t *ent)
 	{
 		DeathmatchScoreboardMessage (ent, ent->enemy);
 		gi.unicast (ent, false);
+	}
+	if (ent->client->chasetoggle == 1) // updating oldplayer display entity
+		CheckChasecam_Viewent(ent);
+}
+
+void ChasecamTrack (edict_t *ent);
+
+void ChasecamStart (edict_t *ent)
+{
+	edict_t		*chasecam;
+				ent->client->chasetoggle = 1; // toggles the chasecam on
+				ent->client->ps.gunindex = 0; // removes the gun model
+				
+				chasecam = G_Spawn ();		// creates chasecam and makes the camera not solid
+				chasecam->owner = ent;
+				chasecam->solid = SOLID_NOT;
+				chasecam->movetype = MOVETYPE_FLYMISSILE;
+				ent->client->chasecam = chasecam;     // copying the chasecam
+				ent->client->oldplayer = G_Spawn();
+}
+
+void ChasecamRestart (edict_t *ent)
+{
+
+	ent->nextthink = level.time + 0.100; // thknk every frame to check if player is out of water
+	
+	if (ent->owner->health <= 0) // cam not needed if player is dead
+    {
+		G_FreeEdict (ent);
+        return;
+    }
+	if (ent->owner->waterlevel) // breaking function if player is in water
+		return;
+      
+    ChasecamStart (ent->owner); // restarting camera if above are false
+    G_FreeEdict (ent);
+        
+}
+
+void ChasecamRemove (edict_t *ent, char *opt)
+{
+	VectorClear (ent->client->chasecam->velocity); // stops camera from moving
+    ent->client->ps.gunindex = gi.modelindex(ent->client->pers.weapon->view_model); // weapon model on screen
+	ent->s.modelindex = ent->client->oldplayer->s.modelindex;
+	if (!strcmp(opt, "background"))     // moving chasecam to background 
+	{
+		ent->client->chasetoggle = 3;
+        ent->client->chasecam->nextthink = level.time + 0.100;
+        ent->client->chasecam->think = ChasecamRestart;      
+	}
+	else if (!strcmp(opt, "off"))       // turning off chasecam
+	{
+		ent->client->chasetoggle = 0;
+        G_FreeEdict (ent->client->oldplayer);
+        G_FreeEdict (ent->client->chasecam);
+    }
+}
+
+   
+void ChasecamTrack (edict_t *ent)
+{
+	trace_t     tr;					// temporary variables and tracing
+    vec3_t      spot1, spot2, dir;
+    vec3_t      forward, right, up;
+    int         distance;
+    int         tot;
+        
+				ent->nextthink = level.time + 0.100;
+				if (ent->owner->waterlevel) // continuously checking for owner to exit water
+				{
+					ChasecamRemove (ent, "background");
+					return;
+				}
+				AngleVectors (ent->owner->client->v_angle, forward, right, up); // acquiring client angles
+				VectorMA (ent->owner->s.origin, ent->chasedist1, forward, spot2);
+				spot2[2] = (spot2[2] + 40.000);
+				
+				if (ent->owner->client->v_angle[0] < 0.000)					// checks for client looking up or down
+					VectorMA (spot2, -(ent->owner->client->v_angle[0] * 0.6), up, spot2);
+				else if (ent->owner->client->v_angle[0] > 0.000)
+					VectorMA (spot2, (ent->owner->client->v_angle[0] * 0.6), up, spot2);
+ 
+				tr = gi.trace (ent->owner->s.origin, NULL, NULL, spot2, ent->owner, false); // trace from origin to spot2
+        
+				VectorSubtract (tr.endpos, ent->owner->s.origin, spot1); // endpoint - startpoint for direction and length
+				ent->chasedist1 = VectorLength (spot1);
+				VectorMA (tr.endpos, 2, forward, spot2);
+				VectorCopy (spot2, spot1);
+				spot1[2] += 32;
+				tr = gi.trace (spot2, NULL, NULL, spot1, ent->owner, false); // trace from spot 2
+				
+				if (tr.fraction < 1.000) // checking if we hit something
+				{
+					VectorCopy (tr.endpos, spot2);
+					spot2[2] -= 32;
+				}
+				VectorSubtract (spot2, ent->s.origin, dir);
+				VectorNormalize (dir);
+				VectorSubtract (spot2, ent->s.origin, spot1);
+				distance = VectorLength (spot1);
+        
+				tr = gi.trace (ent->s.origin, NULL, NULL, spot2, ent->owner, false); // another trace
+        
+				if (tr.fraction == 1.000) // we didn't hit something
+				{
+					VectorSubtract (ent->s.origin, ent->owner->s.origin, spot1);
+					VectorNormalize (spot1);
+					VectorCopy (spot1, ent->s.angles);
+					tot = (distance * 0.400); // percentage of distance to ensure we aren't going too far
+					if (tot > 5.200) // set at top speed
+					{
+						ent->velocity[0] = ((dir[0] * distance) * 5.2);
+						ent->velocity[1] = ((dir[1] * distance) * 5.2);
+						ent->velocity[2] = ((dir[2] * distance) * 5.2);
+					}
+					else
+					{
+						if ( (tot > 1.000) )
+						{
+							ent->velocity[0] = ((dir[0] * distance) * tot);
+							ent->velocity[1] = ((dir[1] * distance) * tot);
+							ent->velocity[2] = ((dir[2] * distance) * tot);
+						}
+						else
+						{
+							ent->velocity[0] = (dir[0] * distance);
+							ent->velocity[1] = (dir[1] * distance);
+							ent->velocity[2] = (dir[2] * distance);
+						}
+					}
+					VectorSubtract (ent->owner->s.origin, ent->s.origin, spot1);
+					if (VectorLength(spot1) < 20)
+					{
+						ent->velocity[0] *= 2; 
+						ent->velocity[1] *= 2; 
+						ent->velocity[2] *= 2; 
+					}
+				}
+				else // we did hit something
+					VectorCopy (spot2, ent->s.origin);
+				
+				ent->chasedist1 += 2;
+				if (ent->chasedist1 > 60.00) // max distance
+					ent->chasedist1 = 60.000;
+ 
+				if (ent->movedir == ent->s.origin)
+				{
+					if (distance > 20)
+						ent->chasedist2++;
+				}
+				if (ent->chasedist2 > 3) // restarting chasecam after 3 mistakes
+				{
+					ChasecamStart (ent->owner);
+					G_FreeEdict(ent);
+					return;
+				}
+				VectorCopy (ent->s.origin, ent->movedir);
+        
+}
+
+void Cmd_Chasecam_Toggle (edict_t *ent) // toggling chasecam on and off
+{
+	if (ent->client->chasetoggle)	
+		ChasecamRemove (ent, "off");
+    else
+        ChasecamStart (ent);
+}
+
+void CheckChasecam_Viewent (edict_t *ent)
+{
+	if ((ent->client->chasetoggle == 1) && (ent->client->oldplayer))
+    {
+		ent->client->oldplayer->s.frame = ent->s.frame;
+		VectorCopy (ent->s.origin, ent->client->oldplayer->s.origin); // copy origin, speed and angle
+        VectorCopy (ent->velocity, ent->client->oldplayer->velocity);
+        VectorCopy (ent->s.angles, ent->client->oldplayer->s.angles);
+		ent->client->oldplayer->s.modelindex = ent->s.modelindex; // making sure we use the correct models
+        ent->client->oldplayer->s.modelindex2 = ent->s.modelindex2;
+		gi.linkentity (ent->client->oldplayer);
 	}
 }
 
