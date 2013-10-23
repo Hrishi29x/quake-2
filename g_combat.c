@@ -84,7 +84,7 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 		if (!(targ->monsterinfo.aiflags & AI_GOOD_GUY))
 		{
 			level.killed_monsters++;
-			attacker->client->pers.exp += 20; // grant experience per kill
+			attacker->client->pers.exp += 15 + rand()%11; // grant experience per kill
 			r = 1 + rand()%100;
 			if (r >= 80) // 20% drop rate for special affix items
 			{

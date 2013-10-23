@@ -299,8 +299,8 @@ void HelpComputer (edict_t *ent)
 		"xv 32 yv 8 picn help "			// background
 		"xv 202 yv 12 string2 \"L : %i\" "		// Level
 		"xv 0 yv 24 cstring2 \"Exp : %i/%i\" "		// Experience
-		"xv 0 yv 54 cstring2 \"%s\" "		// help 1
-		"xv 0 yv 110 cstring2 \"%s\" "		// help 2
+		"xv 0 yv 54 cstring2 \"%s\" "		// Affix 1 if found, empty if not
+		"xv 0 yv 110 cstring2 \"%s\" "		// Affix 2 if found, empty if not
 		"xv 50 yv 164 string2 \" STR       POW       DEX\" " // player stats
 		"xv 50 yv 172 string2 \" %i        %i        %i\" ", 
 		ent->client->pers.lvl,
