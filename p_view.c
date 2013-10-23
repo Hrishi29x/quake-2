@@ -1115,26 +1115,17 @@ void ChasecamRestart (edict_t *ent)
         
 }
 
-void ChasecamRemove (edict_t *ent, char *opt)
+void ChasecamRemove (edict_t *ent) // function to turn chasecam off, if necessary
 {
 	VectorClear (ent->client->chasecam->velocity); // stops camera from moving
     ent->client->ps.gunindex = gi.modelindex(ent->client->pers.weapon->view_model); // weapon model on screen
 	ent->s.modelindex = ent->client->oldplayer->s.modelindex;
-	if (!strcmp(opt, "background"))     // moving chasecam to background 
-	{
-		ent->client->chasetoggle = 3;
-        ent->client->chasecam->nextthink = level.time + 0.100;
-        ent->client->chasecam->think = ChasecamRestart;      
-	}
-	else if (!strcmp(opt, "off"))       // turning off chasecam
-	{
-		ent->client->chasetoggle = 0;
-        G_FreeEdict (ent->client->oldplayer);
-        G_FreeEdict (ent->client->chasecam);
-    }
+	ent->client->chasetoggle = 0;
+    G_FreeEdict (ent->client->oldplayer);
+    G_FreeEdict (ent->client->chasecam);
+    
 }
 
-   
 void ChasecamTrack (edict_t *ent)
 {
 	trace_t     tr;					// temporary variables and tracing
@@ -1144,11 +1135,6 @@ void ChasecamTrack (edict_t *ent)
     int         tot;
         
 				ent->nextthink = level.time + 0.100;
-				if (ent->owner->waterlevel) // continuously checking for owner to exit water
-				{
-					ChasecamRemove (ent, "background");
-					return;
-				}
 				AngleVectors (ent->owner->client->v_angle, forward, right, up); // acquiring client angles
 				VectorMA (ent->owner->s.origin, ent->chasedist1, forward, spot2);
 				spot2[2] = (spot2[2] + 40.000);
@@ -1239,7 +1225,7 @@ void ChasecamTrack (edict_t *ent)
 void Cmd_Chasecam_Toggle (edict_t *ent) // toggling chasecam on and off
 {
 	if (ent->client->chasetoggle)	
-		ChasecamRemove (ent, "off");
+		ChasecamRemove (ent);
     else
         ChasecamStart (ent);
 }
