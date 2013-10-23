@@ -845,7 +845,7 @@ typedef struct
 
 	qboolean	spectator;	// client is a spectator
 	int			Affix[2]; // 1: Double Strike, 2: Bloody Strike, 3: Evasive Action, 4: Infinite Ammo, 5: Life Regen, 6: Life Leech
-	int			Infinite_Ammo; // flag for Infinite Ammo seperate because it's so messy without it
+	int			Infinite_Ammo; // flag for Infinite Ammo seperate because it's so messy without it, might remove it later when cleaning up stuff
 	int			str; // strength
 	int			pow; // power
 	int			dex; // dexterity

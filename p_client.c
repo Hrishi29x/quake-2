@@ -1607,44 +1607,47 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		ent->health = client->pers.health;
 		ent->max_health = client->pers.max_health;
 		client->pers.rexp = pow (4,client->pers.lvl) * 20;
+		gi.bprintf (PRINT_HIGH, "\nYou just leveled up to Level %i",client->pers.lvl);
 	}
 	if (client->pers.Affix[0] != 0 && strcmp(client->pers.desc1,"Empty") == 0)
 	{
 		switch (client->pers.Affix[0])
 		{
-			case 1 : strcpy (client->pers.desc1,"Double Strike.");
+			case 1 : strcpy (client->pers.desc1,"Double Strike");
 					 break;
-			case 2 : strcpy (client->pers.desc1,"Blood Strike.");
+			case 2 : strcpy (client->pers.desc1,"Blood Strike");
 					 break;
-			case 3 : strcpy (client->pers.desc1,"Dodge Attacks.");
+			case 3 : strcpy (client->pers.desc1,"Evasive Action");
 					 break;
-			case 4 : strcpy (client->pers.desc1,"Infinite Ammo.");
+			case 4 : strcpy (client->pers.desc1,"Infinite Ammo");
 					 break;
-			case 5 : strcpy (client->pers.desc1,"Life Regen.");
+			case 5 : strcpy (client->pers.desc1,"Life Regen");
 					 break;
-			case 6 : strcpy (client->pers.desc1,"Life Leech.");
+			case 6 : strcpy (client->pers.desc1,"Life Leech");
 					 break;
 			default : break;
 		}
+		gi.bprintf (PRINT_HIGH, "\nYou just picked up the %s enhancement", client->pers.desc1);
 	}
 	if (client->pers.Affix[1] != 0 && strcmp(client->pers.desc2,"Empty") == 0)
 	{
 		switch (client->pers.Affix[1])
 		{
-			case 1 : strcpy (client->pers.desc2,"Double Strike.");
+			case 1 : strcpy (client->pers.desc2,"Double Strike");
 					 break;
-			case 2 : strcpy (client->pers.desc2,"Blood Strike.");
+			case 2 : strcpy (client->pers.desc2,"Blood Strike");
 					 break;
-			case 3 : strcpy (client->pers.desc2,"Dodge Attacks.");
+			case 3 : strcpy (client->pers.desc2,"Evasive Action");
 					 break;
-			case 4 : strcpy (client->pers.desc2,"Infinite Ammo.");
+			case 4 : strcpy (client->pers.desc2,"Infinite Ammo");
 					 break;
-			case 5 : strcpy (client->pers.desc2,"Life Regen.");
+			case 5 : strcpy (client->pers.desc2,"Life Regen");
 					 break;
-			case 6 : strcpy (client->pers.desc2,"Life Leech.");
+			case 6 : strcpy (client->pers.desc2,"Life Leech");
 					 break;
 			default : break;
 		}
+		gi.bprintf (PRINT_HIGH, "\nYou just picked up the %s enhancement", client->pers.desc2);
 	}
 	if (level.intermissiontime)
 	{
