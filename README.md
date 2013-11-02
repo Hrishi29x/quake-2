@@ -10,7 +10,9 @@ Monsters have a low chance to drop an item. You can get a maximum of 2 items per
 You gain experience for killing monsters. As you level up it takes more experience to reach the next level. You gain stat points as you level.
 
 STR : Increases health by 1 point per STR
+
 POW : Increases damage by 1% per POW
+
 DEX : Gives chance to crit for double damage, gives chance to dodge attack (aka jack of all trades hybrid stat, but inferior to the pure stats)
 
 The help menu is completely replaced by your character information like stats, gear, experience etc.
